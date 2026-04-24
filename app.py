@@ -27,10 +27,39 @@ html, body, [class*="css"] {
     max-width: 980px !important;
 }
 
-/* scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #141619; }
 ::-webkit-scrollbar-thumb { background: #2a2d35; border-radius: 3px; }
+
+/* ── Animated background ── */
+.bg-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+.bg-canvas svg {
+    width: 100%; height: 100%;
+}
+.bg-path {
+    fill: none;
+    stroke-dasharray: 1200;
+    stroke-dashoffset: 1200;
+}
+.bp-green { stroke: #00c896; }
+.bp-blue  { stroke: #4a90d9; }
+.bp-dim   { stroke: #8b95a3; }
+
+@keyframes drawFwd {
+    0%   { stroke-dashoffset: 1200; opacity: 0; }
+    10%  { opacity: 1; }
+    50%  { stroke-dashoffset: 0; opacity: 0.6; }
+    90%  { stroke-dashoffset: -1200; opacity: 0.2; }
+    100% { stroke-dashoffset: -1200; opacity: 0; }
+}
+.bg-path { animation: drawFwd var(--dur, 18s) linear infinite; animation-delay: var(--del, 0s); }
 
 /* ── Hero ── */
 .hero {
@@ -41,10 +70,10 @@ html, body, [class*="css"] {
     margin-bottom: 28px;
     background: #111317;
     overflow: hidden;
+    z-index: 1;
 }
 .hero-dot-grid {
-    position: absolute;
-    inset: 0;
+    position: absolute; inset: 0;
     background-image: radial-gradient(#1e2430 1px, transparent 1px);
     background-size: 24px 24px;
     opacity: 0.7;
@@ -60,68 +89,40 @@ html, body, [class*="css"] {
 .hero-content { position: relative; z-index: 1; }
 .hero-eyebrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    letter-spacing: 0.18em;
-    color: #00c896;
-    margin-bottom: 14px;
-    text-transform: uppercase;
+    font-size: 11px; letter-spacing: 0.18em;
+    color: #00c896; margin-bottom: 14px; text-transform: uppercase;
 }
 .hero h1 {
-    font-size: 42px;
-    font-weight: 700;
-    color: #edf0f4;
-    line-height: 1.15;
-    margin: 0 0 16px;
-    letter-spacing: -0.02em;
+    font-size: 42px; font-weight: 700; color: #edf0f4;
+    line-height: 1.15; margin: 0 0 16px; letter-spacing: -0.02em;
 }
 .hero h1 span { color: #00c896; }
-.hero p {
-    font-size: 15px;
-    color: #6b7280;
-    line-height: 1.7;
-    max-width: 520px;
-    margin: 0 0 28px;
-}
+.hero p { font-size: 15px; color: #6b7280; line-height: 1.7; max-width: 520px; margin: 0 0 28px; }
 .pill-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .pill {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    padding: 5px 13px;
-    border-radius: 20px;
-    border: 1px solid #252830;
-    color: #8b95a3;
-    background: #161820;
+    font-size: 11px; padding: 5px 13px; border-radius: 20px;
+    border: 1px solid #252830; color: #8b95a3; background: #161820;
 }
 
 /* ── Stats ── */
 .stats-row {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    margin-bottom: 28px;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px; margin-bottom: 28px; position: relative; z-index: 1;
 }
 .stat-card {
-    background: #111317;
-    border: 1px solid #1e2128;
-    border-radius: 14px;
-    padding: 20px 18px;
-    position: relative;
-    overflow: hidden;
+    background: #111317; border: 1px solid #1e2128;
+    border-radius: 14px; padding: 20px 18px;
+    position: relative; overflow: hidden;
 }
 .stat-card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
     background: linear-gradient(90deg, #00c896, transparent);
 }
 .stat-num {
-    font-size: 28px;
-    font-weight: 700;
-    color: #edf0f4;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 6px;
+    font-size: 28px; font-weight: 700; color: #edf0f4;
+    letter-spacing: -0.03em; line-height: 1; margin-bottom: 6px;
 }
 .stat-num span { color: #00c896; }
 .stat-desc { font-size: 12px; color: #4b5563; line-height: 1.5; }
@@ -129,93 +130,62 @@ html, body, [class*="css"] {
 /* ── Section label ── */
 .section-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: #3d4450;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
+    color: #3d4450; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 8px;
 }
-.section-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: #1e2128;
-}
+.section-label::after { content: ''; flex: 1; height: 1px; background: #1e2128; }
 
 /* ── Card ── */
 .card {
-    background: #111317;
-    border: 1px solid #1e2128;
-    border-radius: 16px;
-    padding: 26px 26px 22px;
-    margin-bottom: 18px;
+    background: #111317; border: 1px solid #1e2128;
+    border-radius: 16px; padding: 26px 26px 22px;
+    margin-bottom: 18px; position: relative; z-index: 1;
 }
 
 /* ── Inputs ── */
 .stNumberInput label {
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 10px !important;
-    letter-spacing: 0.12em !important;
-    text-transform: uppercase !important;
-    color: #4b5563 !important;
+    font-size: 10px !important; letter-spacing: 0.12em !important;
+    text-transform: uppercase !important; color: #4b5563 !important;
     margin-bottom: 6px !important;
 }
 .stNumberInput input {
-    background: #0d0f12 !important;
-    border: 1px solid #252830 !important;
-    border-radius: 8px !important;
-    color: #d1d5db !important;
+    background: #0d0f12 !important; border: 1px solid #252830 !important;
+    border-radius: 8px !important; color: #d1d5db !important;
     font-family: 'JetBrains Mono', monospace !important;
-    font-size: 14px !important;
-    font-weight: 500 !important;
+    font-size: 14px !important; font-weight: 500 !important;
 }
 .stNumberInput input:focus {
     border-color: #00c896 !important;
     box-shadow: 0 0 0 2px rgba(0,200,150,0.08) !important;
 }
-/* number input buttons */
 .stNumberInput button {
     background: #1a1d24 !important;
-    border-color: #252830 !important;
-    color: #4b5563 !important;
+    border-color: #252830 !important; color: #4b5563 !important;
 }
 
 /* ── Button ── */
 .stButton > button {
-    width: 100%;
-    background: #00c896 !important;
-    color: #0a0d10 !important;
-    border: none !important;
-    border-radius: 10px !important;
-    padding: 15px 24px !important;
-    font-family: 'Syne', sans-serif !important;
-    font-size: 14px !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
-    transition: all 0.2s !important;
+    width: 100%; background: #00c896 !important; color: #0a0d10 !important;
+    border: none !important; border-radius: 10px !important;
+    padding: 15px 24px !important; font-family: 'Syne', sans-serif !important;
+    font-size: 14px !important; font-weight: 700 !important;
+    letter-spacing: 0.04em !important; text-transform: uppercase !important;
+    transition: all 0.2s !important; position: relative; z-index: 1;
 }
 .stButton > button:hover {
-    background: #00e6ad !important;
-    transform: translateY(-1px) !important;
+    background: #00e6ad !important; transform: translateY(-1px) !important;
     box-shadow: 0 8px 24px rgba(0,200,150,0.2) !important;
 }
 
 /* ── Result cards ── */
 .result-box {
-    border-radius: 16px;
-    padding: 26px 28px;
-    margin-top: 18px;
-    position: relative;
-    overflow: hidden;
+    border-radius: 16px; padding: 26px 28px; margin-top: 18px;
+    position: relative; overflow: hidden; z-index: 1;
 }
 .result-box::before {
-    content: '';
-    position: absolute;
-    inset: 0;
+    content: ''; position: absolute; inset: 0;
     background-image: radial-gradient(#ffffff08 1px, transparent 1px);
     background-size: 20px 20px;
 }
@@ -226,173 +196,154 @@ html, body, [class*="css"] {
 .result-inner { position: relative; z-index: 1; }
 .result-risk-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    margin-bottom: 6px;
+    font-size: 10px; letter-spacing: 0.15em;
+    text-transform: uppercase; margin-bottom: 6px;
 }
 .safe-accent   { color: #00c896; }
 .warn-accent   { color: #f0b429; }
 .danger-accent { color: #f56565; }
 
-.result-title {
-    font-size: 22px;
-    font-weight: 700;
-    color: #edf0f4;
-    margin-bottom: 8px;
-    letter-spacing: -0.02em;
-}
-.result-sub {
-    font-size: 13px;
-    color: #6b7280;
-    margin-bottom: 20px;
-    line-height: 1.6;
-}
+.result-title { font-size: 22px; font-weight: 700; color: #edf0f4; margin-bottom: 8px; letter-spacing: -0.02em; }
+.result-sub   { font-size: 13px; color: #6b7280; margin-bottom: 20px; line-height: 1.6; }
+
 .gauge-wrap { margin-bottom: 6px; }
-.gauge-bg {
-    height: 6px;
-    border-radius: 3px;
-    background: #1e2128;
-    overflow: hidden;
-}
+.gauge-bg   { height: 6px; border-radius: 3px; background: #1e2128; overflow: hidden; }
 .gauge-fill-safe   { height:100%; border-radius:3px; background: linear-gradient(90deg,#00a878,#00c896); }
 .gauge-fill-warn   { height:100%; border-radius:3px; background: linear-gradient(90deg,#d4a017,#f0b429); }
 .gauge-fill-danger { height:100%; border-radius:3px; background: linear-gradient(90deg,#c53030,#f56565); }
 .gauge-meta {
-    display: flex;
-    justify-content: space-between;
+    display: flex; justify-content: space-between;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: #3d4450;
-    margin-top: 5px;
+    font-size: 10px; color: #3d4450; margin-top: 5px;
 }
 
 /* ── Recommendations ── */
 .rec-section {
-    margin-top: 22px;
-    padding-top: 18px;
-    border-top: 1px solid #1e2128;
-    position: relative;
-    z-index: 1;
+    margin-top: 22px; padding-top: 18px;
+    border-top: 1px solid #1e2128; position: relative; z-index: 1;
 }
 .rec-heading {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: #4b5563;
-    margin-bottom: 14px;
+    font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: #4b5563; margin-bottom: 14px;
 }
-.rec-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-.rec-card {
-    border-radius: 10px;
-    padding: 13px 15px;
-    border: 1px solid;
-}
+.rec-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.rec-card { border-radius: 10px; padding: 13px 15px; border: 1px solid; }
 .rec-safe   { background: #0d201a; border-color: #1a4030; }
 .rec-warn   { background: #1c1b0d; border-color: #3d3410; }
 .rec-danger { background: #1e1010; border-color: #3d1515; }
+.rec-icon  { font-size: 18px; margin-bottom: 6px; }
+.rec-title { font-size: 12px; font-weight: 600; color: #c9d1da; margin-bottom: 3px; }
+.rec-body  { font-size: 11px; color: #4b5563; line-height: 1.5; }
 
-.rec-icon { font-size: 18px; margin-bottom: 6px; }
-.rec-title {
-    font-size: 12px;
-    font-weight: 600;
-    color: #c9d1da;
-    margin-bottom: 3px;
-}
-.rec-body {
-    font-size: 11px;
-    color: #4b5563;
-    line-height: 1.5;
-}
-
-/* ── Right panel cards ── */
+/* ── Right panel ── */
 .info-card {
-    background: #111317;
-    border: 1px solid #1e2128;
-    border-radius: 16px;
-    padding: 22px 24px 20px;
-    margin-bottom: 16px;
+    background: #111317; border: 1px solid #1e2128;
+    border-radius: 16px; padding: 22px 24px 20px;
+    margin-bottom: 16px; position: relative; z-index: 1;
 }
-.step-row {
-    display: flex;
-    gap: 14px;
-    align-items: flex-start;
-    margin-bottom: 16px;
-}
+.step-row { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 16px; }
 .step-row:last-child { margin-bottom: 0; }
 .step-circle {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    border: 1px solid #252830;
-    background: #161820;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #00c896;
+    width: 28px; height: 28px; border-radius: 50%;
+    border: 1px solid #252830; background: #161820;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #00c896;
 }
 .step-body h4 { font-size: 13px; font-weight: 600; color: #c9d1da; margin: 0 0 3px; }
 .step-body p  { font-size: 12px; color: #4b5563; margin: 0; line-height: 1.5; }
 
-.factor-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-}
-.factor-tile {
-    background: #0d0f12;
-    border: 1px solid #1e2128;
-    border-radius: 10px;
-    padding: 12px 14px;
-}
+.factor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.factor-tile { background: #0d0f12; border: 1px solid #1e2128; border-radius: 10px; padding: 12px 14px; }
 .factor-name { font-size: 12px; font-weight: 600; color: #8b95a3; margin-bottom: 4px; }
 .factor-desc { font-size: 11px; color: #3d4450; line-height: 1.5; }
 
-/* ── Disclaimer ── */
-.disclaimer {
-    background: #131208;
-    border: 1px solid #2a2610;
-    border-radius: 10px;
-    padding: 13px 16px;
-    margin-top: 4px;
-}
-.disclaimer p {
-    font-size: 12px;
-    color: #6b6030;
-    line-height: 1.5;
-    margin: 0;
-}
+.disclaimer { background: #131208; border: 1px solid #2a2610; border-radius: 10px; padding: 13px 16px; margin-top: 4px; }
+.disclaimer p { font-size: 12px; color: #6b6030; line-height: 1.5; margin: 0; }
 
 /* ── Metrics ── */
 [data-testid="stMetric"] {
-    background: #111317;
-    border: 1px solid #1e2128;
-    border-radius: 10px;
-    padding: 14px 16px !important;
+    background: #111317 !important; border: 1px solid #1e2128 !important;
+    border-radius: 10px !important; padding: 14px 16px !important;
+    position: relative; z-index: 1;
 }
 [data-testid="stMetricLabel"] { font-size: 10px !important; color: #3d4450 !important; text-transform: uppercase; letter-spacing: 0.1em; }
 [data-testid="stMetricValue"] { font-size: 18px !important; color: #c9d1da !important; font-family: 'JetBrains Mono', monospace !important; }
 
 /* ── Footer ── */
 .footer {
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #2a2d35;
-    padding: 28px 0 8px;
-    border-top: 1px solid #1a1d22;
-    margin-top: 36px;
-    letter-spacing: 0.06em;
+    text-align: center; font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; color: #2a2d35;
+    padding: 28px 0 8px; border-top: 1px solid #1a1d22;
+    margin-top: 36px; letter-spacing: 0.06em;
+    position: relative; z-index: 1;
 }
+
+/* keep all streamlit chrome above background */
+header, .stSidebar, [data-testid="stToolbar"] { z-index: 999 !important; }
 </style>
+""", unsafe_allow_html=True)
+
+# ── Animated SVG background ─────────────────────────────────────────────────
+st.markdown("""
+<div class="bg-canvas" aria-hidden="true">
+  <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+
+    <!-- Green paths — left-to-right sweeps -->
+    <path class="bg-path bp-green" stroke-width="0.8" stroke-opacity="0.4"
+      style="--dur:22s;--del:0s"
+      d="M-380,-189 C-380,-189 -312,216 152,343 C616,470 684,875 684,875"/>
+    <path class="bg-path bp-green" stroke-width="0.6" stroke-opacity="0.3"
+      style="--dur:26s;--del:-6s"
+      d="M-330,-150 C-330,-150 -260,240 190,365 C640,490 720,880 720,880"/>
+    <path class="bg-path bp-green" stroke-width="0.5" stroke-opacity="0.25"
+      style="--dur:30s;--del:-12s"
+      d="M-280,-110 C-280,-110 -210,260 230,385 C666,510 750,890 750,890"/>
+    <path class="bg-path bp-green" stroke-width="1.0" stroke-opacity="0.35"
+      style="--dur:18s;--del:-3s"
+      d="M-430,-220 C-430,-220 -360,200 120,325 C590,455 660,860 660,860"/>
+    <path class="bg-path bp-green" stroke-width="0.4" stroke-opacity="0.2"
+      style="--dur:34s;--del:-18s"
+      d="M-200,-80 C-200,-80 -140,280 300,400 C720,520 800,900 800,900"/>
+
+    <!-- Mirror paths — right-to-left sweeps -->
+    <path class="bg-path bp-green" stroke-width="0.7" stroke-opacity="0.3"
+      style="--dur:24s;--del:-8s"
+      d="M1820,-189 C1820,-189 1752,216 1268,343 C784,470 716,875 716,875"/>
+    <path class="bg-path bp-green" stroke-width="0.5" stroke-opacity="0.2"
+      style="--dur:28s;--del:-14s"
+      d="M1870,-150 C1870,-150 1800,240 1350,365 C800,490 720,880 720,880"/>
+    <path class="bg-path bp-green" stroke-width="0.9" stroke-opacity="0.3"
+      style="--dur:20s;--del:-2s"
+      d="M1760,-220 C1760,-220 1700,200 1280,325 C810,455 740,860 740,860"/>
+
+    <!-- Blue accent paths -->
+    <path class="bg-path bp-blue" stroke-width="0.6" stroke-opacity="0.25"
+      style="--dur:32s;--del:-10s"
+      d="M-200,-300 C100,-100 400,200 700,400 C1000,600 1200,800 1400,900"/>
+    <path class="bg-path bp-blue" stroke-width="0.4" stroke-opacity="0.2"
+      style="--dur:36s;--del:-20s"
+      d="M-100,-350 C200,-120 500,180 780,380 C1060,580 1260,780 1440,880"/>
+    <path class="bg-path bp-blue" stroke-width="0.8" stroke-opacity="0.2"
+      style="--dur:28s;--del:-5s"
+      d="M1540,-300 C1240,-100 940,200 640,400 C340,600 140,800 -60,900"/>
+
+    <!-- Dim cross paths for depth -->
+    <path class="bg-path bp-dim" stroke-width="0.3" stroke-opacity="0.15"
+      style="--dur:40s;--del:-15s"
+      d="M0,0 C360,150 720,300 1080,450 C1260,525 1440,600 1440,900"/>
+    <path class="bg-path bp-dim" stroke-width="0.3" stroke-opacity="0.12"
+      style="--dur:44s;--del:-22s"
+      d="M1440,0 C1080,150 720,300 360,450 C180,525 0,600 0,900"/>
+    <path class="bg-path bp-dim" stroke-width="0.4" stroke-opacity="0.15"
+      style="--dur:38s;--del:-9s"
+      d="M-100,450 C300,380 700,320 1100,260 C1300,230 1500,200 1600,150"/>
+    <path class="bg-path bp-dim" stroke-width="0.3" stroke-opacity="0.12"
+      style="--dur:42s;--del:-30s"
+      d="M-380,200 C-200,350 100,500 400,600 C700,700 1000,800 1300,875"/>
+  </svg>
+</div>
 """, unsafe_allow_html=True)
 
 # ── Load model ──────────────────────────────────────────────────────────────
@@ -505,7 +456,6 @@ with left:
         probability  = model.predict_proba(input_scaled)[0][1]
         pct          = int(probability * 100)
 
-        # Determine tier
         if pct < 35:
             tier = "safe"
         elif pct < 65:
@@ -514,9 +464,9 @@ with left:
             tier = "danger"
 
         tier_meta = {
-            "safe":   ("safe-accent",  "result-safe",  "LOW RISK",      "✓ Low Diabetes Risk Detected",         f"The model places this patient at {100-pct}% likelihood of being diabetes-free. Continue preventive habits."),
-            "warn":   ("warn-accent",  "result-warn",  "MODERATE RISK", "⚡ Moderate Risk — Action Advised",     f"Risk score of {pct}% suggests pre-diabetic indicators. Lifestyle changes can significantly reduce progression."),
-            "danger": ("danger-accent","result-danger", "HIGH RISK",    "⚠ High Risk — Seek Medical Attention",  f"Risk score of {pct}% indicates strong diabetic markers. Immediate clinical evaluation is strongly recommended."),
+            "safe":   ("safe-accent",   "result-safe",   "LOW RISK",      "✓ Low Diabetes Risk Detected",          f"The model places this patient at {100-pct}% likelihood of being diabetes-free. Continue preventive habits."),
+            "warn":   ("warn-accent",   "result-warn",   "MODERATE RISK", "⚡ Moderate Risk — Action Advised",      f"Risk score of {pct}% suggests pre-diabetic indicators. Lifestyle changes can significantly reduce progression."),
+            "danger": ("danger-accent", "result-danger", "HIGH RISK",     "⚠ High Risk — Seek Medical Attention",  f"Risk score of {pct}% indicates strong diabetic markers. Immediate clinical evaluation is strongly recommended."),
         }
         accent, box_cls, risk_tag, title, sub = tier_meta[tier]
 
